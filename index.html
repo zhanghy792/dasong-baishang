@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#f3e7d0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>大宋百商图 · 同人版</title>
+<style>
+/* 大宋百商图 · H5 界面样式（宋韵纸墨） */
+:root {
+  --paper: #f3e7d0;
+  --paper-2: #fbf4e4;
+  --paper-3: #efe0c6;
+  --ink: #2c2620;
+  --ink-2: #5b5145;
+  --ink-3: #8a7c66;
+  --line: #d9c6a4;
+  --red: #a5362b;
+  --red-2: #c25a45;
+  --gold: #b08a4a;
+  --green: #3f6b5b;
+  --shadow: 0 2px 6px rgba(80, 60, 30, .12);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Songti SC", "STSong", "Noto Serif CJK SC", "Source Han Serif SC", "SimSun", serif;
+  font-size: 14px; line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background-image:
+    radial-gradient(circle at 20% 0%, rgba(176,138,74,.10), transparent 45%),
+    radial-gradient(circle at 90% 30%, rgba(165,54,43,.06), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(120,95,60,.035) 0 1px, transparent 1px 4px);
+  min-height: 100vh;
+  padding-bottom: 96px;
+}
+#app { max-width: 520px; margin: 0 auto; padding: 8px 10px 0; }
+
+/* ---------- 通用 ---------- */
+.row { display: flex; align-items: center; gap: 6px; }
+.spread { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.muted { color: var(--ink-3); }
+.small { font-size: 11.5px; }
+.tiny { font-size: 10.5px; }
+.bold { font-weight: 700; }
+.money { color: var(--red); font-weight: 700; }
+.seal {
+  display: inline-block; padding: 1px 5px; border-radius: 3px;
+  background: var(--red); color: #fff2e0; font-size: 11px; letter-spacing: .5px;
+}
+.panel {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.panel-title {
+  font-size: 12px; color: var(--ink-2); letter-spacing: 2px;
+  display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+}
+.panel-title::before {
+  content: ""; width: 3px; height: 12px; background: var(--red); border-radius: 2px;
+}
+.panel-title .tag { margin-left: auto; letter-spacing: 0; font-size: 11px; color: var(--ink-3); }
+hr.ink { border: 0; border-top: 1px dashed var(--line); margin: 6px 0; }
+
+/* ---------- 标题 / 开局 ---------- */
+.hero { text-align: center; padding: 26px 8px 12px; }
+.hero h1 {
+  font-size: 34px; letter-spacing: 8px; margin: 0; color: var(--ink);
+  text-shadow: 1px 1px 0 rgba(255,255,255,.6);
+}
+.hero .sub { margin-top: 6px; letter-spacing: 4px; color: var(--ink-2); font-size: 12px; }
+.hero .stamp {
+  display: inline-block; margin-top: 10px; padding: 2px 8px;
+  border: 1px solid var(--red); color: var(--red); border-radius: 3px;
+  font-size: 11px; letter-spacing: 2px; transform: rotate(-2deg);
+}
+.opt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.opt {
+  border: 1px solid var(--line); background: var(--paper-2); border-radius: 6px;
+  padding: 8px 4px; text-align: center; cursor: pointer; transition: .15s;
+}
+.opt.on { border-color: var(--red); background: #fdeee6; box-shadow: inset 0 0 0 1px var(--red); }
+.opt .t { font-size: 15px; font-weight: 700; }
+.opt .d { font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+.btn {
+  display: block; width: 100%; border: 0; border-radius: 8px; padding: 13px;
+  background: linear-gradient(180deg, #b44233, #92301f);
+  color: #fff4e6; font-size: 16px; letter-spacing: 4px; font-family: inherit;
+  box-shadow: 0 3px 0 #782417, 0 4px 10px rgba(120,40,20,.25);
+  cursor: pointer;
+}
+.btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #782417; }
+.btn.ghost {
+  background: transparent; color: var(--ink-2); border: 1px solid var(--line);
+  box-shadow: none; font-size: 13px; letter-spacing: 2px; padding: 9px;
+}
+.btn.ghost:active { background: var(--paper-3); }
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 20;
+  background: linear-gradient(180deg, var(--paper) 70%, rgba(243,231,208,0));
+  padding: 6px 0 8px; margin: 0 -10px; padding-left: 10px; padding-right: 10px;
+}
+.goal { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--ink-2); }
+.pip { width: 7px; height: 7px; border-radius: 50%; background: #d7c6a8; display: inline-block; }
+.pip.on { background: var(--red); }
+.players { display: flex; gap: 5px; margin-top: 6px; }
+.pchip {
+  flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px;
+  background: var(--paper-2); font-size: 11px; min-width: 0;
+}
+.pchip.cur { border-color: var(--red); background: #fdeee6; box-shadow: 0 0 0 1px var(--red); }
+.pchip .n { font-weight: 700; font-size: 12px; display: flex; justify-content: space-between; }
+.pchip .n em { font-style: normal; color: var(--red); }
+.pchip .s { color: var(--ink-3); display: flex; justify-content: space-between; }
+
+/* ---------- 事件 ---------- */
+.eventbar {
+  display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px;
+  background: linear-gradient(90deg, #f7ead2, #fbf4e4);
+  border: 1px solid var(--line); border-left: 3px solid var(--gold);
+  margin-bottom: 8px; font-size: 12px;
+}
+.eventbar .ename { font-weight: 700; color: var(--gold); white-space: nowrap; }
+.eventbar .etext { color: var(--ink-2); font-size: 11px; }
+
+/* ---------- 步骤 ---------- */
+.steps { display: flex; gap: 4px; margin-bottom: 8px; }
+.step {
+  flex: 1; text-align: center; font-size: 11.5px; padding: 5px 0; border-radius: 5px;
+  border: 1px dashed var(--line); color: var(--ink-3); background: rgba(255,255,255,.35);
+}
+.step.now { border: 1px solid var(--red); color: var(--red); background: #fdeee6; font-weight: 700; }
+.step.done { color: var(--green); border-color: #b9cbbf; background: #eef4ef; }
+
+/* ---------- 标签页 ---------- */
+.tabs { display: flex; gap: 4px; margin-bottom: 7px; }
+.tab {
+  flex: 1; text-align: center; padding: 6px 0; font-size: 12.5px; border-radius: 5px;
+  background: var(--paper-3); color: var(--ink-2); cursor: pointer; border: 1px solid transparent;
+}
+.tab.on { background: var(--ink); color: #f6ecd8; }
+
+/* ---------- 卡片 ---------- */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.card {
+  position: relative; background: var(--paper-2); border: 1px solid var(--line);
+  border-radius: 7px; padding: 7px 8px; cursor: pointer; overflow: hidden;
+}
+.card:active { transform: scale(.985); }
+.card.dis { opacity: .48; }
+.card .cn { font-size: 13.5px; font-weight: 700; display: flex; align-items: center; gap: 3px; }
+.card .ci { font-size: 14px; }
+.card .cd { font-size: 10.5px; color: var(--ink-3); margin-top: 1px; min-height: 14px; }
+.card .cw { font-size: 10.5px; color: var(--red); margin-top: 2px; }
+.badge {
+  position: absolute; right: 0; top: 0; font-size: 10px; padding: 1px 5px;
+  border-bottom-left-radius: 6px; color: #fff; background: var(--ink-3);
+}
+.badge.t1 { background: #9c3628; }
+.badge.t2 { background: #8a5a2b; }
+.badge.t3 { background: #3f6b5b; }
+.badge.t4 { background: #7d745f; }
+
+/* 菜单小卡 */
+.mcard {
+  background: var(--paper-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 5px 3px 4px; text-align: center; cursor: pointer; position: relative;
+}
+.mcard .mico { font-size: 17px; line-height: 1.1; }
+.mcard .mnm { font-size: 11px; font-weight: 700; }
+.mcard .mpr { font-size: 10px; color: var(--ink-3); }
+.mcard .mpr b { color: var(--red); }
+.mcard.dis { opacity: .45; }
+.mcard .tstrip {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px;
+}
+.tier-1 .tstrip { background: #9c3628; }
+.tier-2 .tstrip { background: #8a5a2b; }
+.tier-3 .tstrip { background: #3f6b5b; }
+.tier-4 .tstrip { background: #7d745f; }
+
+/* ---------- 客人 ---------- */
+.custrow {
+  display: flex; gap: 7px; overflow-x: auto; padding: 2px 2px 6px;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+}
+.custrow::-webkit-scrollbar { display: none; }
+.cust {
+  flex: 0 0 128px; background: linear-gradient(180deg, #fdf7ea, #f6ead4);
+  border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; cursor: pointer;
+  position: relative; box-shadow: var(--shadow);
+}
+.cust:active { transform: scale(.98); }
+.cust .cnm { font-size: 13.5px; font-weight: 700; display: flex; justify-content: space-between; }
+.cust .orders { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 3px; }
+.ord {
+  font-size: 11px; background: #f3e3c8; border: 1px solid #e3cfae; border-radius: 4px;
+  padding: 0 4px; color: var(--ink-2);
+}
+.cust .want { font-size: 10.5px; color: var(--green); margin-top: 3px; }
+.cust .coins {
+  position: absolute; right: -4px; top: -6px; background: var(--gold); color: #fff;
+  border-radius: 9px; padding: 0 5px; font-size: 10.5px; box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
+.cust .est { margin-top: 5px; border-top: 1px dashed var(--line); padding-top: 3px; font-size: 11px; }
+.cust .est b { color: var(--red); font-size: 13px; }
+.cust.best { border-color: var(--red); box-shadow: 0 0 0 1px var(--red), var(--shadow); }
+
+/* ---------- 手牌 / 店铺 ---------- */
+.handrow { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; }
+.handcard {
+  flex: 0 0 62px; border: 1px solid var(--line); border-radius: 6px; background: #fffaf0;
+  text-align: center; padding: 4px 2px; cursor: pointer; position: relative; overflow: hidden;
+}
+.handcard .hi { font-size: 16px; margin-top: 6px; }
+.handcard .hn { font-size: 10.5px; font-weight: 700; }
+.handcard .hv { font-size: 10px; color: var(--red); }
+.handcard .hb { position: absolute; top: 0; left: 0; font-size: 9px; padding: 0 3px; color: #fff; border-radius: 0 0 4px 0; }
+.handcard .hb.t3 { background: #3f6b5b; }
+.handcard .hb.t4 { background: #7d745f; }
+.handcard .hb.t2 { background: #8a5a2b; }
+.handcard .hb.t1 { background: #9c3628; }
+.handcard.trashable { box-shadow: 0 0 0 1px var(--red) inset; }
+.shopchips { display: flex; flex-wrap: wrap; gap: 4px; }
+.shopchip {
+  font-size: 11px; border: 1px solid var(--line); background: #fffaf0; border-radius: 12px;
+  padding: 2px 7px; display: flex; align-items: center; gap: 3px;
+}
+.empty { color: var(--ink-3); font-size: 11.5px; padding: 4px 0; }
+
+/* ---------- 底栏 ---------- */
+.bottombar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+  background: linear-gradient(180deg, rgba(243,231,208,.92), var(--paper));
+  border-top: 1px solid var(--line); padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 -4px 14px rgba(90, 70, 40, .08);
+}
+.bottombar .hint { flex: 1; font-size: 11.5px; color: var(--ink-2); line-height: 1.35; }
+.bottombar .hint b { color: var(--red); }
+.bottombar button {
+  border: 0; border-radius: 8px; padding: 11px 16px; font-family: inherit;
+  background: linear-gradient(180deg, #b44233, #92301f); color: #fff4e6;
+  font-size: 14px; letter-spacing: 2px; min-width: 108px;
+  box-shadow: 0 3px 0 #782417; cursor: pointer;
+}
+.bottombar button:active { transform: translateY(1px); box-shadow: 0 2px 0 #782417; }
+.bottombar button.mini { min-width: 0; padding: 9px 12px; font-size: 12px; background: transparent; color: var(--ink-2); box-shadow: none; border: 1px solid var(--line); }
+
+/* ---------- 弹层 ---------- */
+.mask {
+  position: fixed; inset: 0; background: rgba(40,30,20,.42); z-index: 50;
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fade .15s ease;
+}
+@keyframes fade { from { opacity: 0 } to { opacity: 1 } }
+.sheet {
+  width: 100%; max-width: 520px; background: var(--paper-2);
+  border-radius: 14px 14px 0 0; padding: 14px 16px calc(16px + env(safe-area-inset-bottom));
+  animation: up .18s ease; border-top: 3px solid var(--red);
+}
+@keyframes up { from { transform: translateY(24px) } to { transform: translateY(0) } }
+.sheet h3 { margin: 0 0 4px; font-size: 17px; letter-spacing: 2px; }
+.sheet .sbody { font-size: 13px; color: var(--ink-2); margin: 8px 0 12px; }
+.sheet .srow { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+.sheet .srow b { color: var(--red); }
+.sheet .actions { display: flex; gap: 8px; }
+.sheet .actions .btn { flex: 1; letter-spacing: 2px; font-size: 15px; padding: 12px; }
+.sheet .btn.cancel { background: var(--paper-3); color: var(--ink-2); box-shadow: none; border: 1px solid var(--line); }
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed; left: 50%; bottom: 120px; transform: translateX(-50%);
+  background: rgba(44,38,32,.92); color: #f7ecd8; padding: 8px 16px; border-radius: 20px;
+  font-size: 12.5px; z-index: 60; max-width: 80%; text-align: center;
+  animation: fade .15s ease;
+}
+
+/* ---------- 结果 ---------- */
+.result .crown { text-align: center; font-size: 40px; margin: 4px 0; }
+.rank { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed var(--line); font-size: 13px; }
+.rank .r1 { color: var(--red); font-weight: 700; }
+
+/* ---------- 日志 ---------- */
+.logbox { max-height: 190px; overflow-y: auto; font-size: 11.5px; line-height: 1.6; }
+.logbox .li { padding: 1px 0; color: var(--ink-2); border-bottom: 1px dotted #e6d7bd; }
+.logbox .li.event { color: var(--gold); }
+.logbox .li.host { color: #7a3a28; }
+.logbox .li.turn { color: var(--ink); font-weight: 700; }
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* =========================================================
+ * 大宋百商图 · 同人复刻（原创卡表）
+ * 核心规则引擎 —— 纯 JS，无 DOM 依赖，H5 与小程序共用
+ * 依据鳐鳐鱼《大宋百商图》核心玩法重制：买菜单 / 备菜 / 招待客人 / 开店
+ * ========================================================= */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.GameCore = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  /* ---------------- 基础数据 ---------------- */
+
+  var DISHES = [
+    { id: 'mian', name: '面食', glyph: '面', icon: '🍜' },
+    { id: 'geng', name: '羹汤', glyph: '羹', icon: '🥣' },
+    { id: 'dian', name: '点心', glyph: '点', icon: '🥟' },
+    { id: 'zhi', name: '炙烤', glyph: '炙', icon: '🍢' },
+    { id: 'jiu', name: '酒水', glyph: '酒', icon: '🍶' }
+  ];
+  var DISH_MAP = {};
+  DISHES.forEach(function (d) { DISH_MAP[d.id] = d; });
+
+  // 品级越高（数字越小）越赚：四品→一品
+  var TIERS = [
+    { tier: 4, name: '四品', cost: 3, income: 2, cls: 't4' },
+    { tier: 3, name: '三品', cost: 6, income: 4, cls: 't3' },
+    { tier: 2, name: '二品', cost: 12, income: 8, cls: 't2' },
+    { tier: 1, name: '一品', cost: 20, income: 13, cls: 't1' }
+  ];
+  var TIER_MAP = {};
+  TIERS.forEach(function (t) { TIER_MAP[t.tier] = t; });
+
+  // 每道菜的名目（按品级），纯风味
+  var DISH_NAMES = {
+    mian: { 4: '汤饼', 3: '冷淘', 2: '羊肉面', 1: '玉丝面' },
+    geng: { 4: '菜羹', 3: '鱼羹', 2: '鹌子羹', 1: '百味羹' },
+    dian: { 4: '炊饼', 3: '蒸糕', 2: '水晶包', 1: '蜜煎局' },
+    zhi: { 4: '炙肉', 3: '烤鸭', 2: '烧羊', 1: '御膳炙' },
+    jiu: { 4: '村醪', 3: '羊羔酒', 2: '花雕', 1: '御酒' }
+  };
+
+  // 店铺模板：req = 建造条件
+  var SHOP_TEMPLATES = [
+    { id: 'jiaodian', name: '脚店', icon: '🏮', type: 'jiudian', cost: 6, income: 7, req: null,
+      desc: '街口小酒肆，来者不拒。' },
+    { id: 'chafang', name: '茶坊', icon: '🍵', type: 'chafang', cost: 7, income: 7,
+      req: { kind: 'dish', dish: 'dian', n: 2, text: '需 2 张点心菜单' }, desc: '点茶斗茶，客似云来。' },
+    { id: 'buzhuang', name: '布庄', icon: '🧵', type: 'buzhuang', cost: 8, income: 7,
+      req: null, desc: '绫罗布帛，四时皆有。' },
+    { id: 'xiangyao', name: '香药铺', icon: '🌿', type: 'xiangyao', cost: 9, income: 8,
+      req: { kind: 'dish', dish: 'geng', n: 3, text: '需 3 张羹汤菜单' }, desc: '香药贵重，番商最爱。' },
+    { id: 'yanzhi', name: '胭脂铺', icon: '💄', type: 'yanzhi', cost: 10, income: 8,
+      req: { kind: 'tierMax', tier: 3, n: 2, text: '需 2 张三品及以上菜单' }, desc: '胭脂水粉，娘子驻足。' },
+    { id: 'shuhua', name: '书画铺', icon: '🖼', type: 'shuhua', cost: 11, income: 9,
+      req: { kind: 'tierMax', tier: 2, n: 1, text: '需 1 张二品及以上菜单' }, desc: '笔墨丹青，文人雅集。' },
+    { id: 'washe', name: '瓦舍', icon: '🎭', type: 'washe', cost: 9, income: 8,
+      req: { kind: 'dish', dish: 'jiu', n: 3, text: '需 3 张酒水菜单' }, desc: '勾栏瓦舍，彻夜笙歌。' },
+    { id: 'ciqi', name: '瓷器铺', icon: '🏺', type: 'ciqi', cost: 12, income: 9,
+      req: { kind: 'tierMax', tier: 2, n: 2, text: '需 2 张二品及以上菜单' }, desc: '汝窑官窑，价重千金。' },
+    { id: 'dangpu', name: '当铺', icon: '💰', type: 'dangpu', cost: 14, income: 10,
+      req: { kind: 'shops', n: 4, text: '需已有 4 家店铺' }, desc: '急人所急，利在其中。' },
+    { id: 'zhengdian', name: '正店', icon: '🏯', type: 'zhengdian', cost: 16, income: 12,
+      req: { kind: 'tierMax', tier: 1, n: 1, text: '需 1 张一品菜单' }, desc: '七十二正店之首，非豪商不能开。' }
+  ];
+  var SHOP_COPIES = {
+    jiaodian: 5, chafang: 4, buzhuang: 4, xiangyao: 3, yanzhi: 3,
+    shuhua: 3, washe: 3, ciqi: 3, dangpu: 3, zhengdian: 3
+  };
+
+  // 客人牌：orders 点菜，wants 想逛的店铺类型，bounty 赏钱
+  var CUSTOMERS = [
+    { name: '王员外', orders: { mian: 2, geng: 1 }, wants: ['zhengdian', 'dangpu'], bounty: 3 },
+    { name: '张屠户', orders: { zhi: 2, jiu: 1 }, wants: ['jiudian', 'washe'], bounty: 2 },
+    { name: '李秀才', orders: { dian: 1, geng: 1 }, wants: ['shuhua', 'chafang'], bounty: 1 },
+    { name: '苏小娘子', orders: { dian: 2, jiu: 1 }, wants: ['yanzhi', 'chafang'], bounty: 2 },
+    { name: '西域胡商', orders: { zhi: 2, mian: 1 }, wants: ['xiangyao', 'dangpu'], bounty: 3 },
+    { name: '游方僧', orders: { geng: 2, mian: 1 }, wants: ['chafang', 'shuhua'], bounty: 1 },
+    { name: '衙内', orders: { mian: 2, jiu: 2 }, wants: ['zhengdian', 'washe'], bounty: 4 },
+    { name: '花魁娘子', orders: { dian: 3, jiu: 1 }, wants: ['washe', 'yanzhi'], bounty: 4 },
+    { name: '脚夫', orders: { mian: 3 }, wants: ['jiudian', 'buzhuang'], bounty: 1 },
+    { name: '教书先生', orders: { geng: 1, dian: 2 }, wants: ['shuhua', 'chafang'], bounty: 2 },
+    { name: '绸缎商', orders: { mian: 2, jiu: 1 }, wants: ['buzhuang', 'jiudian'], bounty: 3 },
+    { name: '瓷商', orders: { dian: 2, zhi: 1 }, wants: ['ciqi', 'shuhua'], bounty: 3 },
+    { name: '药农', orders: { geng: 3 }, wants: ['xiangyao', 'chafang'], bounty: 2 },
+    { name: '茶博士', orders: { dian: 2, geng: 1 }, wants: ['chafang', 'shuhua'], bounty: 3 },
+    { name: '番商', orders: { jiu: 3, zhi: 1 }, wants: ['xiangyao', 'washe'], bounty: 5 },
+    { name: '太学生', orders: { mian: 1, dian: 1, geng: 1 }, wants: ['shuhua', 'chafang'], bounty: 2 },
+    { name: '富户', orders: { mian: 2, geng: 1, jiu: 1 }, wants: ['zhengdian', 'buzhuang'], bounty: 5 },
+    { name: '脚店掌柜', orders: { zhi: 3 }, wants: ['jiudian', 'washe'], bounty: 2 },
+    { name: '画师', orders: { dian: 1, jiu: 2 }, wants: ['shuhua', 'ciqi'], bounty: 2 },
+    { name: '香客', orders: { geng: 2, dian: 1 }, wants: ['xiangyao', 'chafang'], bounty: 1 },
+    { name: '米商', orders: { mian: 2, zhi: 2 }, wants: ['buzhuang', 'dangpu'], bounty: 3 },
+    { name: '县尉', orders: { mian: 1, geng: 1, jiu: 1 }, wants: ['dangpu', 'zhengdian'], bounty: 2 },
+    { name: '镖师', orders: { zhi: 2, mian: 1, jiu: 1 }, wants: ['dangpu', 'jiudian'], bounty: 3 },
+    { name: '灯会娘子', orders: { dian: 3 }, wants: ['yanzhi', 'chafang'], bounty: 3 },
+    { name: '老丈', orders: { geng: 2, mian: 1 }, wants: ['xiangyao', 'chafang'], bounty: 1 },
+    { name: '少东家', orders: { mian: 2, dian: 1, jiu: 1 }, wants: ['washe', 'yanzhi'], bounty: 4 },
+    { name: '游侠儿', orders: { jiu: 2, zhi: 2 }, wants: ['washe', 'jiudian'], bounty: 3 },
+    { name: '巧匠', orders: { mian: 2, geng: 2 }, wants: ['buzhuang', 'ciqi'], bounty: 2 }
+  ];
+
+  var EVENTS = [
+    { id: 'deng', name: '上元灯会', text: '本轮每次招待额外 +2 两', effect: { incomeBonus: 2 } },
+    { id: 'yun', name: '漕运迟滞', text: '本轮所有采购 +2 两', effect: { buyDelta: 2 } },
+    { id: 'gui', name: '贵人临门', text: '本轮首次招待额外 +5 两', effect: { firstHostBonus: 5 } },
+    { id: 'mi', name: '米价腾贵', text: '本轮开始时每人付 2 两', effect: { startPay: 2 } },
+    { id: 'que', name: '官府征榷', text: '本轮结束时每人付 1 两', effect: { endPay: 1 } },
+    { id: 'kai', name: '吉日开张', text: '本轮建造费 -2（最低 1 两）', effect: { buildDelta: -2 } },
+    { id: 'ke', name: '客似云来', text: '本轮客人行多摆 1 张', effect: { rowBonus: 1 } },
+    { id: 'feng', name: '风调雨顺', text: '本轮无额外影响', effect: {} }
+  ];
+
+  var CONFIGS = {
+    classic: { key: 'classic', label: '经典局', shops: 8, money: 50, note: '忠于原版条件：8 家店 + 50 两，约 20 分钟' },
+    standard: { key: 'standard', label: '标准局', shops: 6, money: 30, note: '约 10-15 分钟，推荐' },
+    quick: { key: 'quick', label: '闪电局', shops: 4, money: 20, note: '约 5-8 分钟' }
+  };
+
+  var PLAYER_NAMES = ['沈记', '赵记', '周记', '吴记'];
+
+  /* ---------------- 随机数 ---------------- */
+
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = a + 0x6D2B79F5 | 0;
+      var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+  // 可序列化的随机数状态（存档用）
+  function nextRand(st) {
+    var a = st.rngState = (st.rngState + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  }
+  function pick(rng, arr) { return arr[Math.floor(rng() * arr.length)]; }
+  function shuffle(rng, arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  /* ---------------- 卡牌构造 ---------------- */
+
+  var uidSeq = 0;
+  function makeMenu(dishId, tier) {
+    var d = DISH_MAP[dishId], t = TIER_MAP[tier];
+    return {
+      uid: 'm' + (++uidSeq),
+      kind: 'menu',
+      dish: dishId,
+      tier: tier,
+      name: DISH_NAMES[dishId][tier],
+      label: t.name + '·' + d.name,
+      income: t.income,
+      cost: t.cost
+    };
+  }
+  function makeShop(tplId) {
+    var t = null;
+    for (var i = 0; i < SHOP_TEMPLATES.length; i++) if (SHOP_TEMPLATES[i].id === tplId) t = SHOP_TEMPLATES[i];
+    return {
+      uid: 's' + (++uidSeq),
+      kind: 'shop',
+      id: t.id,
+      name: t.name,
+      icon: t.icon,
+      type: t.type,
+      cost: t.cost,
+      income: t.income,
+      req: t.req,
+      desc: t.desc
+    };
+  }
+  function makeCustomer(c) {
+    return {
+      uid: 'c' + (++uidSeq),
+      kind: 'customer',
+      name: c.name,
+      orders: clone(c.orders),
+      wants: c.wants.slice(),
+      bounty: c.bounty || 0,
+      coins: 0
+    };
+  }
+
+  /* ---------------- 规则查询 ---------------- */
+
+  function cur(st) { return st.players[st.order[st.turnIdx]]; }
+  function curIdx(st) { return st.order[st.turnIdx]; }
+
+  function allMenus(p) { return p.hand.concat(p.deck, p.discard); }
+
+  function menuCountBy(p, dish) {
+    var n = 0;
+    allMenus(p).forEach(function (c) { if (c.dish === dish) n++; });
+    return n;
+  }
+  function menuCountByTierMax(p, tier) {
+    var n = 0;
+    allMenus(p).forEach(function (c) { if (c.tier <= tier) n++; });
+    return n;
+  }
+
+  function reqMet(p, req) {
+    if (!req) return true;
+    if (req.kind === 'shops') return p.shops.length >= req.n;
+    if (req.kind === 'dish') return menuCountBy(p, req.dish) >= req.n;
+    if (req.kind === 'tierMax') return menuCountByTierMax(p, req.tier) >= req.n;
+    if (req.kind === 'money') return p.money >= req.n;
+    return true;
+  }
+
+  function buildFee(st) {
+    var p = cur(st);
+    var base = 1 + p.shops.length;
+    var ev = st.event && st.event.effect ? st.event.effect : {};
+    var d = ev.buildDelta || 0;
+    return Math.max(1, base + d);
+  }
+
+  function buyDelta(st) {
+    var ev = st.event && st.event.effect ? st.event.effect : {};
+    return ev.buyDelta || 0;
+  }
+
+  function menuPrice(st, tier) { return TIER_MAP[tier].cost + buyDelta(st); }
+
+  function shopPrice(st, shop) {
+    if (!shop) return null;
+    return shop.cost + buildFee(st) + buyDelta(st);
+  }
+
+  function canBuyMenu(st, tier) {
+    if (st.phase !== 'buy' || st.bought) return { ok: false, why: '本回合已买过' };
+    var price = menuPrice(st, tier);
+    if (cur(st).money < price) return { ok: false, why: '铜钱不足（需 ' + price + ' 两）' };
+    return { ok: true };
+  }
+
+  function canBuildShop(st, shop) {
+    if (st.phase !== 'buy' || st.bought) return { ok: false, why: '本回合已买过' };
+    var p = cur(st);
+    if (!reqMet(p, shop.req)) return { ok: false, why: '条件不足：' + (shop.req ? shop.req.text : '') };
+    var price = shopPrice(st, shop);
+    if (p.money < price) return { ok: false, why: '铜钱不足（需 ' + price + ' 两）' };
+    return { ok: true };
+  }
+
+  /* ---------------- 收入结算 ---------------- */
+
+  function computeHost(st, card) {
+    var p = cur(st);
+    var used = {};
+    var parts = [];
+    var menuSum = 0;
+    DISHES.forEach(function (d) {
+      var need = card.orders[d.id] || 0;
+      if (!need) return;
+      var pool = p.hand.filter(function (c) { return c.dish === d.id && !used[c.uid]; })
+        .sort(function (a, b) { return b.income - a.income; });
+      var take = Math.min(need, pool.length);
+      var sum = 0;
+      for (var i = 0; i < take; i++) { sum += pool[i].income; used[pool[i].uid] = true; }
+      menuSum += sum;
+      parts.push({ dish: d, need: need, served: take, income: sum, cards: pool.slice(0, take) });
+    });
+
+    var shopSum = 0;
+    var shopParts = [];
+    (card.wants || []).forEach(function (t) {
+      p.shops.forEach(function (s) {
+        if (s.type === t) { shopSum += s.income; shopParts.push(s); }
+      });
+    });
+
+    var ev = st.event && st.event.effect ? st.event.effect : {};
+    var evBonus = ev.incomeBonus || 0;
+    if (ev.firstHostBonus && !st.firstHostUsed) evBonus += ev.firstHostBonus;
+
+    var total = menuSum + shopSum + (card.bounty || 0) + (card.coins || 0) + evBonus;
+
+    return {
+      menuSum: menuSum, shopSum: shopSum, bounty: card.bounty || 0,
+      coins: card.coins || 0, evBonus: evBonus, total: total,
+      parts: parts, shopParts: shopParts, usedUids: Object.keys(used)
+    };
+  }
+
+  /* ---------------- 初始化 ---------------- */
+
+  function starterCards() {
+    var cards = [];
+    var spec = [['mian', 2], ['geng', 2], ['dian', 1], ['jiu', 1]];
+    spec.forEach(function (s) { for (var i = 0; i < s[1]; i++) cards.push(makeMenu(s[0], 4)); });
+    cards.push(makeMenu('zhi', 3));
+    cards.push(makeMenu('geng', 3));
+    return cards;
+  }
+
+  function buildShopDeck(rng) {
+    var deck = [];
+    Object.keys(SHOP_COPIES).forEach(function (id) {
+      for (var i = 0; i < SHOP_COPIES[id]; i++) deck.push(makeShop(id));
+    });
+    return shuffle(rng, deck);
+  }
+
+  function buildCustomerDeck(rng) {
+    var deck = CUSTOMERS.map(function (c) { return makeCustomer(c); });
+    return shuffle(rng, deck);
+  }
+
+  function createGame(opts) {
+    opts = opts || {};
+    var n = Math.max(2, Math.min(4, opts.players || 2));
+    var cfgKey = opts.config || 'standard';
+    var cfg = CONFIGS[cfgKey] || CONFIGS.standard;
+    var seed = opts.seed == null ? (Math.floor(Math.random() * 1e9) || 1) : opts.seed;
+
+    var st = {
+      seed: seed,
+      cfg: cfg,
+      cfgKey: cfg.key,
+      players: [],
+      order: [],
+      turnIdx: 0,
+      round: 0,
+      phase: 'idle',
+      bought: false,
+      prepared: false,
+      firstHostUsed: false,
+      market: { shops: [], menus: [] },
+      row: [],
+      event: null,
+      log: [],
+      winner: null,
+      rngState: seed,
+      rng: null,
+      shopDeck: [],
+      customerDeck: [],
+      usedCustomers: [],
+      eventDeck: [],
+      stats: { turns: 0 }
+    };
+
+    st.rng = function () { return nextRand(st); };
+    var rng = st.rng;
+    for (var i = 0; i < n; i++) {
+      var deck = shuffle(rng, starterCards());
+      st.players.push({
+        idx: i,
+        name: (opts.names && opts.names[i]) || PLAYER_NAMES[i],
+        money: 5 + i,
+        hand: [],
+        deck: deck,
+        discard: [],
+        shops: [],
+        color: ['#a03a2e', '#2f5d62', '#7a5c2e', '#4a3f6b'][i]
+      });
+      st.order.push(i);
+    }
+
+    st.shopDeck = buildShopDeck(rng);
+    st.customerDeck = buildCustomerDeck(rng);
+    st.eventDeck = shuffle(rng, EVENTS.map(function (e) { return clone(e); }));
+
+    // 菜单市场：四个品级各摆一张
+    st.market.menus = TIERS.map(function (t) {
+      return { tier: t.tier, card: makeMenu(pick(rng, DISHES).id, t.tier) };
+    });
+    // 店铺市场：4 张
+    for (var k = 0; k < 4; k++) st.market.shops.push(st.shopDeck.pop());
+
+    log(st, '开局：' + n + ' 位少东家入场，' + cfg.label + '（' + cfg.shops + ' 店 + ' + cfg.money + ' 两）');
+    st.phase = 'buy';
+    startRound(st);
+    startTurn(st);
+    return st;
+  }
+
+  /* ---------------- 日志 ---------------- */
+
+  function log(st, text, kind) {
+    st.log.push({ round: st.round, text: text, kind: kind || 'info' });
+    if (st.log.length > 120) st.log.shift();
+  }
+
+  /* ---------------- 抽牌 ---------------- */
+
+  function drawToHand(st, p) {
+    while (p.hand.length < 5) {
+      if (!p.deck.length) {
+        if (!p.discard.length) break;
+        p.deck = shuffle(st.rng, p.discard);
+        p.discard = [];
+      }
+      p.hand.push(p.deck.pop());
+    }
+  }
+
+  function discardHand(st, p) {
+    p.discard = p.discard.concat(p.hand);
+    p.hand = [];
+  }
+
+  /* ---------------- 轮次 ---------------- */
+
+  function startRound(st) {
+    st.round++;
+    st.firstHostUsed = false;
+    if (!st.eventDeck.length) {
+      st.eventDeck = shuffle(st.rng, EVENTS.map(function (e) { return clone(e); }));
+    }
+    st.event = st.eventDeck.pop();
+    log(st, '【第 ' + st.round + ' 轮】' + st.event.name + '：' + st.event.text, 'event');
+
+    var target = 4 + ((st.event.effect && st.event.effect.rowBonus) || 0);
+    refillRow(st, target);
+
+    if (st.event.effect && st.event.effect.startPay) {
+      st.players.forEach(function (p) {
+        var pay = Math.min(p.money, st.event.effect.startPay);
+        p.money -= pay;
+        if (pay) log(st, p.name + ' 付 ' + pay + ' 两（米价腾贵）', 'money');
+      });
+    }
+  }
+
+  // 若市集里的铺面全都无人能满足条件，就重摆一遍，避免卡死
+  function ensurePlayableMarket(st) {
+    var anyOk = function (shop) {
+      return st.players.some(function (p) { return reqMet(p, shop.req); });
+    };
+    for (var k = 0; k < 3; k++) {
+      if (st.market.shops.length && st.market.shops.some(anyOk)) return;
+      if (!st.shopDeck.length) return;
+      st.market.shops.forEach(function (s) { st.shopDeck.unshift(s); });
+      st.market.shops = [];
+      for (var i = 0; i < 4 && st.shopDeck.length; i++) st.market.shops.push(st.shopDeck.pop());
+      log(st, '市集重摆铺面', 'event');
+    }
+  }
+
+  // 市集里始终保有一间无条件的铺面，保证进度不卡死
+  function ensureStarterShop(st) {
+    var hasBasic = st.market.shops.some(function (s) { return !s.req; });
+    if (hasBasic) return;
+    var at = -1;
+    for (var i = 0; i < st.shopDeck.length; i++) {
+      if (!st.shopDeck[i].req) { at = i; break; }
+    }
+    if (at < 0) return;
+    var basic = st.shopDeck.splice(at, 1)[0];
+    if (st.market.shops.length >= 4) {
+      st.shopDeck.unshift(st.market.shops.pop());
+    }
+    st.market.shops.push(basic);
+  }
+
+  function refillRow(st, target) {
+    while (st.row.length < target) {
+      if (!st.customerDeck.length) {
+        st.customerDeck = shuffle(st.rng, st.usedCustomers);
+        st.usedCustomers = [];
+      }
+      if (!st.customerDeck.length) break;
+      var c = st.customerDeck.pop();
+      c.coins = 0;
+      st.row.push(c);
+    }
+  }
+
+  function startTurn(st) {
+    var p = cur(st);
+    st.bought = false;
+    st.prepared = false;
+    st.phase = 'buy';
+    drawToHand(st, p);
+    log(st, '—— 轮到 ' + p.name + '（' + p.money + ' 两）', 'turn');
+  }
+
+  function nextTurn(st) {
+    var p = cur(st);
+    discardHand(st, p);
+    st.stats.turns++;
+    if (st.turnIdx === st.order.length - 1) {
+      if (st.event && st.event.effect && st.event.effect.endPay) {
+        st.players.forEach(function (q) {
+          var pay = Math.min(q.money, st.event.effect.endPay);
+          q.money -= pay;
+          if (pay) log(st, q.name + ' 付 ' + pay + ' 两（官府征榷）', 'money');
+        });
+      }
+    }
+    if (st.winner != null) { st.phase = 'over'; return; }
+    st.turnIdx++;
+    if (st.turnIdx >= st.order.length) {
+      st.turnIdx = 0;
+      startRound(st);
+    }
+    startTurn(st);
+  }
+
+  function checkWin(st) {
+    var p = cur(st);
+    if (p.shops.length >= st.cfg.shops && p.money >= st.cfg.money) {
+      st.winner = p.idx;
+      st.phase = 'over';
+      log(st, '🎉 ' + p.name + ' 开出 ' + p.shops.length + ' 家店铺、身家 ' + p.money + ' 两，成为汴京头号商人！', 'win');
+      return true;
+    }
+    return false;
+  }
+
+  /* ---------------- 行动 ---------------- */
+
+  function buyMenu(st, tier) {
+    var chk = canBuyMenu(st, tier);
+    if (!chk.ok) return chk;
+    var p = cur(st);
+    var slot = st.market.menus.filter(function (m) { return m.tier === tier; })[0];
+    if (!slot) return { ok: false, why: '市场没有该品级' };
+    var price = menuPrice(st, tier);
+    p.money -= price;
+    var card = slot.card;
+    p.discard.push(card);
+    slot.card = makeMenu(pick(st.rng, DISHES).id, tier);
+    st.bought = true;
+    log(st, p.name + ' 购入菜单「' + card.label + '」花 ' + price + ' 两', 'buy');
+    if (st.phase === 'buy') st.phase = 'prepare';
+    checkWin(st);
+    return { ok: true, card: card, price: price };
+  }
+
+  function buildShop(st, shopUid) {
+    if (st.phase !== 'buy' && st.phase !== 'prepare') return { ok: false, why: '现在不是购买阶段' };
+    if (st.bought) return { ok: false, why: '本回合已买过' };
+    var idx = -1;
+    for (var i = 0; i < st.market.shops.length; i++) if (st.market.shops[i].uid === shopUid) idx = i;
+    if (idx < 0) return { ok: false, why: '店铺不在市场中' };
+    var shop = st.market.shops[idx];
+    var chk = canBuildShop(st, shop);
+    if (!chk.ok) return chk;
+    var p = cur(st);
+    var price = shopPrice(st, shop);
+    var fee = buildFee(st) + buyDelta(st);
+    p.money -= price;
+    p.shops.push(shop);
+    st.market.shops.splice(idx, 1);
+    if (st.shopDeck.length) st.market.shops.push(st.shopDeck.pop());
+    st.bought = true;
+    log(st, p.name + ' 建造「' + shop.name + '」花 ' + price + ' 两（牌价 ' + shop.cost + ' + 建造费 ' + fee + '）', 'shop');
+    if (st.phase === 'buy') st.phase = 'prepare';
+    checkWin(st);
+    return { ok: true, shop: shop, price: price };
+  }
+
+  function trashMenu(st, cardUid) {
+    if (st.phase !== 'prepare' && st.phase !== 'buy') return { ok: false, why: '现在不能备菜' };
+    if (st.prepared) return { ok: false, why: '本回合已备过菜' };
+    var p = cur(st);
+    if (p.money < 2) return { ok: false, why: '铜钱不足（备菜需 2 两）' };
+    var idx = -1;
+    for (var i = 0; i < p.hand.length; i++) if (p.hand[i].uid === cardUid) idx = i;
+    if (idx < 0) return { ok: false, why: '只能淘汰手牌里的菜单' };
+    var card = p.hand[idx];
+    if (card.tier < 3) return { ok: false, why: '只能淘汰三品及以下的菜' };
+    p.money -= 2;
+    p.hand.splice(idx, 1);
+    st.prepared = true;
+    log(st, p.name + ' 花 2 两淘汰「' + card.label + '」', 'trash');
+    if (st.phase === 'buy') st.phase = 'prepare';
+    return { ok: true, card: card };
+  }
+
+  function host(st, rowIdx) {
+    if (st.phase !== 'host') return { ok: false, why: '请先完成购买与备菜' };
+    var card = st.row[rowIdx];
+    if (!card) return { ok: false, why: '没有这张客人牌' };
+    var p = cur(st);
+    var calc = computeHost(st, card);
+
+    for (var i = 0; i < rowIdx; i++) st.row[i].coins = (st.row[i].coins || 0) + 1;
+
+    p.money += calc.total;
+    st.row.splice(rowIdx, 1);
+    st.usedCustomers.push(card);
+    if (st.event && st.event.effect && st.event.effect.firstHostBonus) st.firstHostUsed = true;
+    st.stats.turns++;
+    discardHand(st, p);
+    log(st, p.name + ' 招待「' + card.name + '」收入 ' + calc.total + ' 两（菜品 ' + calc.menuSum +
+      ' + 店铺 ' + calc.shopSum + ' + 赏钱 ' + calc.bounty + ' + 等客铜钱 ' + calc.coins +
+      (calc.evBonus ? ' + 事件 ' + calc.evBonus : '') + '）', 'host');
+
+    var won = checkWin(st);
+    if (won) {
+      st.phase = 'over';
+    } else {
+      st.phase = 'buy';
+      nextTurn(st);
+    }
+    return { ok: true, calc: calc };
+  }
+
+  function canHost(st, rowIdx) {
+    if (st.phase !== 'host') return { ok: false, why: '请先完成购买与备菜' };
+    if (!st.row[rowIdx]) return { ok: false, why: '没有这张客人牌' };
+    return { ok: true };
+  }
+
+  function endBuyPhase(st) {
+    if (st.phase !== 'buy') return { ok: false };
+    st.phase = 'prepare';
+    return { ok: true };
+  }
+  function endPreparePhase(st) {
+    if (st.phase !== 'prepare') return { ok: false };
+    st.phase = 'host';
+    return { ok: true };
+  }
+
+  /* ---------------- 展示辅助 ---------------- */
+
+  function shopWantedBy(card, type) { return (card.wants || []).indexOf(type) >= 0; }
+
+  function playerSummary(p) {
+    return {
+      name: p.name, money: p.money, shops: p.shops.length,
+      hand: p.hand.length, deck: p.deck.length + p.discard.length
+    };
+  }
+
+  function serialize(st) {
+    return JSON.stringify(st);
+  }
+  function deserialize(json) {
+    var st = JSON.parse(json);
+    if (!st || !st.players) return null;
+    st.rng = function () { return nextRand(st); };
+    if (typeof st.rngState !== 'number') st.rngState = 1;
+    return st;
+  }
+
+  return {
+    serialize: serialize, deserialize: deserialize,
+    DISHES: DISHES, TIERS: TIERS, DISH_MAP: DISH_MAP, TIER_MAP: TIER_MAP,
+    DISH_NAMES: DISH_NAMES, SHOP_TEMPLATES: SHOP_TEMPLATES, CUSTOMERS: CUSTOMERS,
+    EVENTS: EVENTS, CONFIGS: CONFIGS, PLAYER_NAMES: PLAYER_NAMES,
+    createGame: createGame, cur: cur, curIdx: curIdx,
+    menuPrice: menuPrice, shopPrice: shopPrice, buildFee: buildFee, buyDelta: buyDelta,
+    canBuyMenu: canBuyMenu, canBuildShop: canBuildShop, canHost: canHost,
+    reqMet: reqMet, menuCountBy: menuCountBy, menuCountByTierMax: menuCountByTierMax,
+    computeHost: computeHost, host: host, buyMenu: buyMenu, buildShop: buildShop,
+    trashMenu: trashMenu, endBuyPhase: endBuyPhase, endPreparePhase: endPreparePhase,
+    shopWantedBy: shopWantedBy, playerSummary: playerSummary, allMenus: allMenus
+  };
+});
+
+</script>
+<script>
+/* 大宋百商图 · H5 界面 */
+(function () {
+  'use strict';
+  var C = window.GameCore;
+  var S = null;
+  var setup = { players: 2, config: 'standard' };
+  var ui = { tab: 'shop', modal: null, log: false, marketOpen: false };
+  var el = document.getElementById('app');
+
+  /* ---------- 小工具 ---------- */
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function toast(msg, ms) {
+    var old = document.querySelector('.toast');
+    if (old) old.remove();
+    var d = document.createElement('div');
+    d.className = 'toast';
+    d.textContent = msg;
+    document.body.appendChild(d);
+    setTimeout(function () { if (d.parentNode) d.remove(); }, ms || 1700);
+  }
+  function nl(n) { return n + ' 两'; }
+  function save() {
+    try { localStorage.setItem('dsbs_v1', C.serialize(S)); } catch (e) {}
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem('dsbs_v1');
+      if (!raw) return null;
+      var st = C.deserialize(raw);
+      if (st && st.phase && st.phase !== 'over') return st;
+    } catch (e) {}
+    return null;
+  }
+  function dishIcon(id) { return (C.DISH_MAP[id] || {}).icon || ''; }
+  function dishName(id) { return (C.DISH_MAP[id] || {}).name || id; }
+  function tierName(t) { return (C.TIER_MAP[t] || {}).name || ''; }
+  function shopTypeName(type) {
+    var t = C.SHOP_TEMPLATES.filter(function (s) { return s.type === type; })[0];
+    return t ? t.name : type;
+  }
+
+  /* ---------- 渲染 ---------- */
+  function render() {
+    var y = window.scrollY;
+    el.innerHTML = S ? renderGame() : renderSetup();
+    if (ui.modal) el.insertAdjacentHTML('beforeend', renderModal());
+    window.scrollTo(0, y);
+    if (S) save();
+  }
+
+  function renderSetup() {
+    var cfg = C.CONFIGS[setup.config];
+    return '' +
+      '<div class="hero">' +
+        '<h1>大宋百商图</h1>' +
+        '<div class="sub">梦 回 汴 京 · 少 东 家 的 一 天</div>' +
+        '<div class="stamp">同人复刻 · 原创卡表</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<div class="panel-title">开 局 人 数</div>' +
+        '<div class="opt-grid">' +
+          [2, 3, 4].map(function (n) {
+            return '<div role="button" tabindex="0" class="opt ' + (setup.players === n ? 'on' : '') + '" data-act="players" data-val="' + n + '">' +
+              '<div class="t">' + n + ' 人</div><div class="d">一台手机轮流玩</div></div>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<div class="panel-title">对 局 长 度</div>' +
+        '<div class="opt-grid">' +
+          ['quick', 'standard', 'classic'].map(function (k) {
+            var c = C.CONFIGS[k];
+            return '<div role="button" tabindex="0" class="opt ' + (setup.config === k ? 'on' : '') + '" data-act="config" data-val="' + k + '">' +
+              '<div class="t">' + c.label + '</div>' +
+              '<div class="d">' + c.shops + ' 店 + ' + c.money + ' 两</div></div>';
+          }).join('') +
+        '</div>' +
+        '<div class="small muted" style="margin-top:6px">' + esc(cfg.note) + '</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<div class="panel-title">怎 么 赢</div>' +
+        '<div class="small">先开出 <b>' + cfg.shops + '</b> 家店铺、并持有 <b>' + cfg.money + '</b> 两铜钱的人获胜。<br>' +
+          '每人回合三件事：<b>买一张</b>菜单或店铺 → 可花 2 两<b>淘汰</b>一张低品菜 → <b>招待一位客人</b>赚钱。</div>' +
+      '</div>' +
+      '<button class="btn" data-act="start">开 张 营 业</button>' +
+      '<div style="height:14px"></div>' +
+      '<button class="btn ghost" data-act="rules">玩法细则</button>' +
+      '<div style="height:24px"></div>';
+  }
+
+  function renderGame() {
+    var p = C.cur(S);
+    var over = S.phase === 'over';
+    return renderTop() + renderEvent() + renderSteps() + renderMarket() + renderCustomers() + renderMine() +
+      renderBottom() + (ui.log ? renderLog() : '');
+  }
+
+  function renderTop() {
+    var cfg = S.cfg;
+    var pips = '';
+    for (var i = 0; i < cfg.shops; i++) pips += '<i class="pip ' + (C.cur(S).shops.length > i ? 'on' : '') + '"></i>';
+    return '<div class="topbar">' +
+      '<div class="spread">' +
+        '<div class="row"><span class="seal">第 ' + S.round + ' 轮</span>' +
+          '<span class="small muted">' + esc(cfg.label) + ' · ' + cfg.shops + ' 店 + ' + cfg.money + ' 两</span></div>' +
+        '<div class="row">' +
+          '<button class="tab" style="padding:3px 8px;font-size:11px" data-act="log">日志</button>' +
+          '<button class="tab" style="padding:3px 8px;font-size:11px" data-act="rules">规则</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="players">' + S.players.map(function (pl) {
+        var cur = pl.idx === C.curIdx(S);
+        return '<div class="pchip ' + (cur ? 'cur' : '') + '">' +
+          '<div class="n">' + esc(pl.name) + (cur ? ' <span class="tiny">◀</span>' : '') + '<em>' + pl.money + '</em></div>' +
+          '<div class="s"><span>店 ' + pl.shops.length + '</span><span>牌 ' + (pl.deck.length + pl.discard.length + pl.hand.length) + '</span></div>' +
+        '</div>';
+      }).join('') + '</div>' +
+      '<div class="goal" style="margin-top:4px">' + pips +
+        '<span style="margin-left:4px">当前 ' + C.cur(S).name + '：' + C.cur(S).shops.length + '/' + cfg.shops + ' 店 · ' +
+        C.cur(S).money + '/' + cfg.money + ' 两</span></div>' +
+    '</div>';
+  }
+
+  function renderEvent() {
+    if (!S.event) return '';
+    return '<div class="eventbar" data-act="eventinfo">' +
+      '<span class="ename">' + esc(S.event.name) + '</span>' +
+      '<span class="etext">' + esc(S.event.text) + '</span>' +
+    '</div>';
+  }
+
+  function renderSteps() {
+    var ph = S.phase;
+    var steps = [
+      { k: 'buy', t: '① 采购' },
+      { k: 'prepare', t: '② 备菜' },
+      { k: 'host', t: '③ 招待' }
+    ];
+    var order = { buy: 0, prepare: 1, host: 2 };
+    var now = order[ph] == null ? 3 : order[ph];
+    return '<div class="steps">' + steps.map(function (s, i) {
+      var cls = i === now ? 'now' : (i < now ? 'done' : '');
+      return '<div class="step ' + cls + '">' + s.t + '</div>';
+    }).join('') + '</div>';
+  }
+
+  function renderMarket() {
+    var buyable = S.phase === 'buy' && !S.bought;
+    var p = C.cur(S);
+    if (!buyable && !ui.marketOpen) {
+      return '<div class="panel" data-act="foldmarket">' +
+        '<div class="panel-title">市 场<span class="tag">本回合已停止采购 · 点开看看</span></div></div>';
+    }
+    var body;
+    if (ui.tab === 'shop') {
+      body = '<div class="grid2">' + S.market.shops.map(function (s) {
+        var price = C.shopPrice(S, s);
+        var reqOk = C.reqMet(p, s.req);
+        var moneyOk = p.money >= price;
+        var status = !buyable ? '本回合已买' : (reqOk ? (moneyOk ? '' : '铜钱不足') : '条件不足');
+        var dis = !buyable || !reqOk || !moneyOk;
+        return '<div role="button" tabindex="0" class="card ' + (dis ? 'dis' : '') + '" data-act="shop" data-val="' + s.uid + '">' +
+          '<div class="cn"><span class="ci">' + s.icon + '</span>' + esc(s.name) +
+            '<span class="tiny muted" style="margin-left:auto">收 ' + s.income + '</span></div>' +
+          '<div class="cd">' + (s.req ? esc(s.req.text) : '无建造条件') + '</div>' +
+          '<div class="cw"><b>' + price + ' 两</b>' + (status ? '<span class="tiny muted" style="margin-left:4px">' + status + '</span>' : '') + '</div>' +
+        '</div>';
+      }).join('') + '</div>';
+    } else {
+      body = '<div class="grid4">' + S.market.menus.map(function (m) {
+        var card = m.card;
+        var price = C.menuPrice(S, m.tier);
+        var chk = C.canBuyMenu(S, m.tier);
+        return '<div role="button" tabindex="0" class="mcard tier-' + m.tier + ' ' + (chk.ok ? '' : 'dis') + '" data-act="menu" data-val="' + m.tier + '">' +
+          '<span class="tstrip"></span>' +
+          '<div class="mico">' + dishIcon(card.dish) + '</div>' +
+          '<div class="mnm">' + esc(card.name) + '</div>' +
+          '<div class="mpr">' + tierName(m.tier) + ' · <b>' + price + '</b> 两</div>' +
+          '<div class="mpr">收入 ' + card.income + '</div>' +
+        '</div>';
+      }).join('') + '</div>';
+    }
+    return '<div class="panel">' +
+      '<div class="panel-title">市 场<span class="tag"' + (buyable ? '' : ' data-act="foldmarket"') + '>' + (buyable ? '本回合可买 1 张' : '收起') + '</span></div>' +
+      '<div class="tabs">' +
+        '<div role="button" tabindex="0" class="tab ' + (ui.tab === 'shop' ? 'on' : '') + '" data-act="tab" data-val="shop">店铺</div>' +
+        '<div role="button" tabindex="0" class="tab ' + (ui.tab === 'menu' ? 'on' : '') + '" data-act="tab" data-val="menu">菜单</div>' +
+      '</div>' + body +
+    '</div>';
+  }
+
+  function bestHostIdx() {
+    var best = -1, bv = -1;
+    S.row.forEach(function (c, i) {
+      var v = C.computeHost(S, c).total;
+      if (v > bv) { bv = v; best = i; }
+    });
+    return best;
+  }
+
+  function renderCustomers() {
+    var best = bestHostIdx();
+    var p = C.cur(S);
+    return '<div class="panel">' +
+      '<div class="panel-title">门 前 客<span class="tag">' +
+        (S.phase === 'host' ? '点客人牌招待' : '排在前面的客人，被人跳过会攒铜钱') + '</span></div>' +
+      '<div class="custrow">' + S.row.map(function (c, i) {
+        var o = '';
+        C.DISHES.forEach(function (d) {
+          var n = c.orders[d.id];
+          if (n) o += '<span class="ord">' + d.icon + d.name + '×' + n + '</span>';
+        });
+        var wants = (c.wants || []).map(function (t) {
+          var own = p.shops.some(function (s) { return s.type === t; });
+          return '<span style="' + (own ? 'color:#3f6b5b;font-weight:700' : '') + '">' + esc(shopTypeName(t)) + (own ? ' ✓' : '') + '</span>';
+        }).join('、');
+        var calc = C.computeHost(S, c);
+        return '<div role="button" tabindex="0" class="cust ' + (i === best ? 'best' : '') + '" data-act="host" data-val="' + i + '">' +
+          (c.coins ? '<span class="coins">+' + c.coins + '</span>' : '') +
+          '<div class="cnm">' + esc(c.name) + '<span class="tiny muted">赏' + c.bounty + '</span></div>' +
+          '<div class="orders">' + o + '</div>' +
+          '<div class="want">想逛：' + wants + '</div>' +
+          '<div class="est">预计收入 <b>+' + calc.total + '</b></div>' +
+        '</div>';
+      }).join('') + '</div>' +
+    '</div>';
+  }
+
+  function renderMine() {
+    var p = C.cur(S);
+    var canTrash = (S.phase === 'prepare') && !S.prepared && p.money >= 2;
+    return '<div class="panel">' +
+      '<div class="panel-title">' + esc(p.name) + ' 的 后 厨' +
+        '<span class="tag">手牌 ' + p.hand.length + ' · 牌库 ' + (p.deck.length + p.discard.length) + ' · ' + p.money + ' 两</span></div>' +
+      '<div class="handrow">' + p.hand.map(function (c) {
+        var tr = canTrash && c.tier >= 3;
+        return '<div role="button" tabindex="0" class="handcard ' + (tr ? 'trashable' : '') + '" data-act="handinfo" data-val="' + c.uid + '">' +
+          '<span class="hb t' + c.tier + '">' + tierName(c.tier) + '</span>' +
+          '<div class="hi">' + dishIcon(c.dish) + '</div>' +
+          '<div class="hn">' + esc(c.name) + '</div>' +
+          '<div class="hv">收 ' + c.income + '</div>' +
+        '</div>';
+      }).join('') + '</div>' +
+      '<hr class="ink">' +
+      '<div class="row" style="justify-content:space-between;margin-bottom:3px">' +
+        '<span class="small muted">店铺 ' + p.shops.length + ' 家</span>' +
+        (canTrash ? '<span class="tiny" style="color:#a5362b">备菜：点手牌可花 2 两淘汰</span>' : '') +
+      '</div>' +
+      '<div class="shopchips">' + (p.shops.length ? p.shops.map(function (s) {
+        return '<span class="shopchip">' + s.icon + esc(s.name) + '<b style="color:#a5362b">+' + s.income + '</b></span>';
+      }).join('') : '<span class="empty">还没有店铺 </span>') + '</div>' +
+    '</div>';
+  }
+
+  function renderBottom() {
+    var p = C.cur(S);
+    var hint, btn, act;
+    if (S.phase === 'over') {
+      hint = '本局已结束，' + S.players[S.winner].name + ' 成为汴京头号商人。';
+      btn = '查看结算'; act = 'result';
+    } else if (S.phase === 'buy') {
+      hint = '采购：菜单或店铺，<b>本回合限买 1 张</b>。' + (S.bought ? '已买过，去备菜吧。' : '');
+      btn = '跳过采购'; act = 'skipbuy';
+    } else if (S.phase === 'prepare') {
+      hint = '备菜：可花 <b>2 两</b>淘汰一张三品及以下的菜，让牌库更精。' + (S.prepared ? '已备过菜。' : '');
+      btn = '备菜完成'; act = 'doneprep';
+    } else {
+      hint = '招待：点一位客人，收入 = 菜品 + 店铺 + 赏钱 + 等客铜钱。';
+      btn = '看客人'; act = 'scrollhost';
+    }
+    return '<div class="bottombar">' +
+      '<div class="hint">' + hint + '</div>' +
+      '<button data-act="' + act + '">' + btn + '</button>' +
+    '</div>';
+  }
+
+  function renderLog() {
+    var items = S.log.slice(-14);
+    return '<div class="panel"><div class="panel-title">对 局 记 事<span class="tag" data-act="log">收起</span></div><div class="logbox">' +
+      items.map(function (l) { return '<div class="li ' + l.kind + '">' + esc(l.text) + '</div>'; }).join('') +
+      '</div></div>';
+  }
+
+  /* ---------- 弹层 ---------- */
+  function renderModal() {
+    var m = ui.modal;
+    var body = '', title = '', actions = '';
+    if (m.type === 'shop') {
+      var s = m.shop;
+      var price = C.shopPrice(S, s);
+      var fee = C.buildFee(S) + C.buyDelta(S);
+      title = '建造「' + s.name + '」';
+      body = '<div class="srow"><span>牌价</span><span>' + s.cost + ' 两</span></div>' +
+        '<div class="srow"><span>建造费（第 ' + (C.cur(S).shops.length + 1) + ' 家）</span><span>' + fee + ' 两</span></div>' +
+        '<div class="srow"><span>合计</span><b>' + price + ' 两</b></div>' +
+        (s.req ? '<div class="srow"><span>条件</span><span>' + esc(s.req.text) + '</span></div>' : '') +
+        '<div class="srow"><span>招待加收</span><span>客人想逛时 +' + s.income + ' 两</span></div>' +
+        '<div class="small muted" style="margin-top:8px">' + esc(s.desc) + '</div>';
+      actions = '<button class="btn" data-act="confirm">花 ' + price + ' 两 建 造</button>' +
+        '<button class="btn cancel" data-act="close">再想想</button>';
+    } else if (m.type === 'menu') {
+      var card = m.card;
+      var mprice = C.menuPrice(S, m.tier);
+      title = '买下「' + card.name + '」';
+      body = '<div class="srow"><span>品级</span><span>' + tierName(m.tier) + '</span></div>' +
+        '<div class="srow"><span>菜系</span><span>' + dishIcon(card.dish) + ' ' + dishName(card.dish) + '</span></div>' +
+        '<div class="srow"><span>每道收入</span><b>' + card.income + ' 两</b></div>' +
+        '<div class="srow"><span>价格</span><b>' + mprice + ' 两</b></div>' +
+        '<div class="small muted" style="margin-top:8px">买下的菜会进弃牌堆，洗牌后上手。</div>';
+      actions = '<button class="btn" data-act="confirm">花 ' + mprice + ' 两 买 下</button>' +
+        '<button class="btn cancel" data-act="close">再想想</button>';
+    } else if (m.type === 'trash') {
+      title = '淘汰「' + m.card.label + '」';
+      body = '<div class="srow"><span>费用</span><b>2 两</b></div>' +
+        '<div class="srow"><span>效果</span><span>永久移出牌库</span></div>' +
+        '<div class="small muted" style="margin-top:8px">劣菜会占手牌位，早点换掉更划算。</div>';
+      actions = '<button class="btn" data-act="confirm">花 2 两 淘 汰</button>' +
+        '<button class="btn cancel" data-act="close">算了</button>';
+    } else if (m.type === 'host') {
+      var c = m.card, calc = m.calc;
+      title = '招待「' + c.name + '」';
+      var rows = '';
+      calc.parts.forEach(function (p) {
+        rows += '<div class="srow"><span>' + p.dish.icon + p.dish.name + ' ×' + p.need + '（上 ' + p.served + '）</span><span>+' + p.income + ' 两</span></div>';
+      });
+      if (calc.shopParts.length) {
+        rows += '<div class="srow"><span>想逛的店铺 ' + calc.shopParts.map(function (s) { return s.name; }).join('、') + '</span><span>+' + calc.shopSum + ' 两</span></div>';
+      }
+      if (calc.bounty) rows += '<div class="srow"><span>客人赏钱</span><span>+' + calc.bounty + ' 两</span></div>';
+      if (calc.coins) rows += '<div class="srow"><span>等客铜钱</span><span>+' + calc.coins + ' 两</span></div>';
+      if (calc.evBonus) rows += '<div class="srow"><span>' + esc(S.event.name) + '</span><span>+' + calc.evBonus + ' 两</span></div>';
+      body = rows + '<div class="srow" style="border-top:1px solid #d9c6a4;border-bottom:0;margin-top:4px"><span class="bold">合计</span><b style="font-size:17px">+' + calc.total + ' 两</b></div>';
+      actions = '<button class="btn" data-act="confirm">招 待</button>' +
+        '<button class="btn cancel" data-act="close">换一位</button>';
+    } else if (m.type === 'result') {
+      var rank = S.players.slice().sort(function (a, b) {
+        if (a.idx === S.winner) return -1;
+        if (b.idx === S.winner) return 1;
+        return (b.shops.length - a.shops.length) || (b.money - a.money);
+      });
+      var win = S.players[S.winner];
+      title = '汴京头号商人';
+      body = '<div class="crown">🏮</div>' +
+        '<div style="text-align:center;font-size:16px;margin-bottom:8px"><b>' + esc(win.name) + '</b> 笑到最后</div>' +
+        rank.map(function (p, i) {
+          return '<div class="rank"><span class="' + (i === 0 ? 'r1' : '') + '">' + (i + 1) + '. ' + esc(p.name) + (p.idx === S.winner ? ' 🏮' : '') + '</span>' +
+            '<span>' + p.shops.length + ' 店 · ' + p.money + ' 两</span></div>';
+        }).join('');
+      actions = '<button class="btn" data-act="restart">再 来 一 局</button>' +
+        '<button class="btn cancel" data-act="home">回 到 开 局</button>';
+    } else if (m.type === 'rules') {
+      title = '玩法细则';
+      body = '<div class="small" style="line-height:1.7">' +
+        '<b>目标</b>：先开出 ' + S.cfg.shops + ' 家店铺、并持有 ' + S.cfg.money + ' 两，立即获胜。<br><br>' +
+        '<b>回合三步</b><br>' +
+        '① <b>采购</b>：买 1 张菜单或建 1 间店铺（二选一）。店铺要付牌价 + 建造费（1 + 已有店数，越开越贵）。<br>' +
+        '② <b>备菜</b>：可花 2 两淘汰 1 张三品及以下的菜，精简牌库。<br>' +
+        '③ <b>招待</b>：从客人行挑 1 位，收入 = 手牌里端得出的菜 + 客人想逛、而你已开的店铺 + 客人赏钱 + 卡上攒的等客铜钱。<br><br>' +
+        '<b>等客铜钱</b>：你跳过的客人头上会各 +1 两，留给他人的诱惑。<br>' +
+        '<b>品级</b>：一品最强，四品最弱；买贵菜更赚，但别让劣菜占住手牌。<br>' +
+        '<b>事件</b>：每轮开始翻 1 张，影响本轮所有人。' +
+        '</div>';
+      actions = '<button class="btn" data-act="close">知 道 了</button>' +
+        '<button class="btn cancel" data-act="restart">重新开局</button>';
+      body += '<div class="small muted" style="margin-top:10px;text-align:center"><span data-act="home" style="text-decoration:underline">回到开局页</span></div>';
+    }
+    return '<div class="mask" data-act="mask"><div class="sheet">' +
+      '<h3>' + title + '</h3><div class="sbody">' + body + '</div>' +
+      '<div class="actions">' + actions + '</div>' +
+    '</div></div>';
+  }
+
+  /* ---------- 交互 ---------- */
+  function closeModal() { ui.modal = null; render(); }
+
+  function openShop(uid) {
+    if (S.phase !== 'buy' || S.bought) { toast('本回合已经不买了，去备菜或招待吧'); return; }
+    var s = S.market.shops.filter(function (x) { return x.uid === uid; })[0];
+    if (!s) return;
+    var chk = C.canBuildShop(S, s);
+    if (!chk.ok) { toast(chk.why); return; }
+    ui.modal = { type: 'shop', shop: s };
+    render();
+  }
+
+  function openMenu(tier) {
+    if (S.phase !== 'buy' || S.bought) { toast('本回合已经不买了，去备菜或招待吧'); return; }
+    var slot = S.market.menus.filter(function (x) { return x.tier === tier; })[0];
+    if (!slot) return;
+    var chk = C.canBuyMenu(S, tier);
+    if (!chk.ok) { toast(chk.why); return; }
+    ui.modal = { type: 'menu', tier: tier, card: slot.card };
+    render();
+  }
+
+  function openTrash(uid) {
+    if (S.phase !== 'prepare') { toast('备菜阶段才能淘汰菜'); return; }
+    var p = C.cur(S);
+    var card = p.hand.filter(function (c) { return c.uid === uid; })[0];
+    if (!card) return;
+    if (S.prepared) { toast('本回合已经备过菜了'); return; }
+    if (p.money < 2) { toast('铜钱不足（备菜需 2 两）'); return; }
+    if (card.tier < 3) { toast('只能淘汰三品及以下的菜'); return; }
+    ui.modal = { type: 'trash', card: card };
+    render();
+  }
+
+  function openHost(i) {
+    if (S.phase === 'over') return;
+    if (S.phase === 'buy') { toast('先完成采购（或点底部「跳过采购」）'); return; }
+    if (S.phase === 'prepare') { toast('先备菜（或点底部「备菜完成」）'); return; }
+    var c = S.row[i];
+    if (!c) return;
+    var calc = C.computeHost(S, c);
+    ui.modal = { type: 'host', card: c, calc: calc, idx: i };
+    render();
+  }
+
+  function doConfirm() {
+    var m = ui.modal;
+    if (!m) return;
+    var r;
+    if (m.type === 'shop') r = C.buildShop(S, m.shop.uid);
+    else if (m.type === 'menu') r = C.buyMenu(S, m.tier);
+    else if (m.type === 'trash') r = C.trashMenu(S, m.card.uid);
+    else if (m.type === 'host') r = C.host(S, m.idx);
+    if (r && r.ok === false) { toast(r.why || '没成功'); return; }
+    ui.modal = null;
+    if (S.phase === 'over') {
+      ui.modal = { type: 'result' };
+      render();
+      return;
+    }
+    render();
+    if (m.type === 'host') {
+      var p = C.cur(S);
+      toast('第 ' + S.round + ' 轮 · 轮到 ' + p.name);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (m.type === 'shop' || m.type === 'menu') {
+      toast('已买下，接着备菜');
+    }
+  }
+
+  /* ---------- 事件绑定 ---------- */
+  el.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act]');
+    if (!t) return;
+    var act = t.getAttribute('data-act');
+    var val = t.getAttribute('data-val');
+    if (act !== 'mask') e.stopPropagation();
+    switch (act) {
+      case 'players': setup.players = parseInt(val, 10); render(); break;
+      case 'config': setup.config = val; render(); break;
+      case 'start':
+        S = C.createGame({ players: setup.players, config: setup.config });
+        ui.tab = 'shop'; ui.marketOpen = false;
+        render();
+        toast('开局！' + C.cur(S).name + ' 先手');
+        break;
+      case 'tab': ui.tab = val; render(); break;
+      case 'foldmarket': ui.marketOpen = !ui.marketOpen; render(); break;
+      case 'shop': openShop(val); break;
+      case 'menu': openMenu(parseInt(val, 10)); break;
+      case 'host': openHost(parseInt(val, 10)); break;
+      case 'handinfo':
+        if (S.phase === 'prepare') openTrash(val);
+        else toast('手牌里这些菜用来招待客人，备菜阶段可淘汰');
+        break;
+      case 'skipbuy':
+        if (S.phase !== 'buy') break;
+        C.endBuyPhase(S); render(); break;
+      case 'doneprep':
+        if (S.phase !== 'prepare') break;
+        C.endPreparePhase(S); render(); break;
+      case 'scrollhost':
+        var row = document.querySelector('.custrow');
+        if (row) row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        toast('点客人牌招待');
+        break;
+      case 'log': ui.log = !ui.log; render(); break;
+      case 'result': ui.modal = { type: 'result' }; render(); break;
+      case 'rules': ui.modal = { type: 'rules' }; render(); break;
+      case 'eventinfo': toast(S.event ? S.event.name + '：' + S.event.text : ''); break;
+      case 'confirm': doConfirm(); break;
+      case 'close': closeModal(); break;
+      case 'mask': if (e.target === t) closeModal(); break;
+      case 'restart':
+        ui.modal = null;
+        S = C.createGame({ players: setup.players, config: setup.config });
+        render(); toast('新的一局，' + C.cur(S).name + ' 先手');
+        break;
+      case 'home':
+        ui.modal = null; S = null;
+        try { localStorage.removeItem('dsbs_v1'); } catch (e) {}
+        render(); break;
+    }
+  });
+
+  S = load();
+  render();
+  if (S) toast('已接着上一局');
+})();
+
+</script>
+</body>
+</html>
